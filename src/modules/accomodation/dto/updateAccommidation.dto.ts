@@ -1,113 +1,141 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ListingType } from '@prisma/client';
 import {
+  IsArray,
   IsBoolean,
-  IsDate,
   IsEnum,
   IsInt,
-  IsJSON,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 
 export class UpdateAccommidationDto {
-  @ApiPropertyOptional()
   @IsInt()
   id: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: true })
   @IsBoolean()
   @IsOptional()
-  isActive?: boolean;
+  isActive: boolean;
 
-  @ApiPropertyOptional()
+  @ApiProperty({
+    type: [String],
+    description: 'Image file names',
+    example: ['img1.jpg', 'img2.png'],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  img?: string[];
+
+  @ApiProperty({ example: 'Luxury Villa' })
   @IsString()
   @IsOptional()
-  title?: string;
+  title: string;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 3 })
   @IsInt()
   @IsOptional()
-  beds?: number;
+  beds: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 2 })
   @IsInt()
   @IsOptional()
-  baths?: number;
+  baths: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 1 })
   @IsInt()
   @IsOptional()
-  garage?: number;
+  garage: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 1500 })
   @IsInt()
   @IsOptional()
-  sq_ft?: number;
+  sq_ft: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 250000.0 })
   @IsNumber()
   @IsOptional()
-  price?: number;
+  price: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 15000.0 })
   @IsNumber()
   @IsOptional()
   discount?: number;
 
-  @ApiPropertyOptional({ type: String, format: 'date-time' })
-  @IsDate()
+  @ApiProperty({
+    description: 'Year the building was constructed',
+    example: 2021,
+  })
+  @IsInt()
   @IsOptional()
-  build_year?: Date;
+  build_year: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 'Beautiful villa with sea view' })
   @IsString()
   @IsOptional()
-  description?: string;
+  description: string;
 
-  @ApiPropertyOptional({ type: 'object', additionalProperties: true })
-  @IsJSON()
+  @ApiPropertyOptional({
+    type: [String],
+    example: ['doc1.pdf', 'brochure.pdf'],
+  })
   @IsOptional()
-  documents?: JSON;
+  @IsArray()
+  @IsString({ each: true })
+  documents?: string[];
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    example: 'https://maps.google.com/?q=40.7128,-74.0060',
+  })
   @IsString()
   @IsOptional()
   map_url?: string;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 40.7128 })
   @IsNumber()
   @IsOptional()
-  latitude?: number; // 🔧 Was wrongly typed as `string`
+  latitude: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: -74.006 })
   @IsNumber()
   @IsOptional()
-  longitude?: number;
+  longitude: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 'USA' })
   @IsString()
   @IsOptional()
-  country?: string;
+  country: string;
 
-  @ApiPropertyOptional({ type: 'object', additionalProperties: true })
-  @IsJSON()
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'Selected features (e.g., WiFi, Gym)',
+    example: ['WiFi', 'Gym', 'Pool'],
+  })
   @IsOptional()
-  extra_features?: JSON;
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  extra_features?: string[];
 
-  @ApiPropertyOptional({ enum: ListingType })
+  @ApiProperty({ enum: ListingType, example: ListingType.ForSale })
   @IsEnum(ListingType)
   @IsOptional()
-  listing_type?: ListingType;
+  listing_type: ListingType;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 1 })
   @IsInt()
   @IsOptional()
-  user_id?: number;
+  user_id: number;
 
-  @ApiPropertyOptional()
+  @ApiProperty({ example: 2 })
   @IsInt()
   @IsOptional()
-  category_id?: number;
+  category_id: number;
+
+  @ApiPropertyOptional({ example: 'intro-video.mp4', nullable: true })
+  @IsOptional()
+  @IsString()
+  introVideo?: string | null;
 }

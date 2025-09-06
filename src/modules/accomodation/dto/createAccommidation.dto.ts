@@ -1,95 +1,124 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ListingType } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
-  IsDate,
   IsEnum,
   IsInt,
-  IsJSON,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 
 export class CreateAccommidationDto {
-  @ApiProperty()
+  @ApiProperty({ example: true })
   @IsBoolean()
   isActive: boolean;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: [String],
+    description: 'Image file names',
+    example: ['img1.jpg', 'img2.png'],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  img?: string[];
+
+  @ApiProperty({ example: 'Luxury Villa' })
   @IsString()
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 3 })
   @IsInt()
   beds: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 2 })
   @IsInt()
   baths: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsInt()
   garage: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 1500 })
   @IsInt()
   sq_ft: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 250000.0 })
   @IsNumber()
   price: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 15000.0 })
   @IsNumber()
   @IsOptional()
   discount?: number;
 
-  @ApiProperty({ type: String, format: 'date-time' })
-  @IsDate()
-  build_year: Date;
+  @Type(() => Number)
+  @ApiProperty({
+    description: 'Year the building was constructed',
+    example: 2021,
+  })
+  @IsInt()
+  build_year: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Beautiful villa with sea view' })
   @IsString()
   description: string;
 
-  @ApiProperty({ type: 'object', additionalProperties: true })
-  @IsJSON()
-  documents: JSON;
+  @ApiPropertyOptional({
+    type: [String],
+    example: ['doc1.pdf', 'brochure.pdf'],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  documents?: string[];
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    example: 'https://maps.google.com/?q=40.7128,-74.0060',
+  })
   @IsString()
+  @IsOptional()
   map_url?: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 40.7128 })
   @IsNumber()
   latitude: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: -74.006 })
   @IsNumber()
   longitude: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'USA' })
   @IsString()
   country: string;
 
-  @ApiProperty({ type: 'object', additionalProperties: true })
-  @IsJSON()
-  extra_features: JSON;
+  @ApiPropertyOptional({
+    type: [String],
+    description: 'Selected features (e.g., WiFi, Gym)',
+    example: ['WiFi', 'Gym', 'Pool'],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  extra_features?: string[];
 
-  @ApiProperty({ enum: ListingType })
+  @ApiProperty({ enum: ListingType, example: ListingType.ForSale })
   @IsEnum(ListingType)
   listing_type: ListingType;
 
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsInt()
   user_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 2 })
   @IsInt()
   category_id: number;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'intro-video.mp4', nullable: true })
+  @IsOptional()
   @IsString()
-  introVideo?: string;
+  introVideo?: string | null;
 }

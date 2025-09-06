@@ -37,6 +37,7 @@ model User {
 
 model Accomodation {
   id             Int         @id @default(autoincrement())
+  img            Json
   isActive       Boolean
   title          String
   beds           Int
@@ -45,7 +46,7 @@ model Accomodation {
   sq_ft          Int
   price          Float
   discount       Float?
-  build_year     DateTime
+  build_year     Int
   description    String
   documents      Json?
   map_url        String?
@@ -58,19 +59,11 @@ model Accomodation {
   user_id        Int
   category_id    Int
 
-  accomodationImgs AccomodationImg[]
-  user             User              @relation(fields: [user_id], references: [id])
-  category         Category          @relation(fields: [category_id], references: [id])
-  likes            Like[]
-  ratings          Rating[]
-  contacts         Contact[]
-}
-
-model AccomodationImg {
-  id             Int          @id @default(autoincrement())
-  url            String
-  accomodationId Int
-  accomodation   Accomodation @relation(fields: [accomodationId], references: [id])
+  user     User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  category Category  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  likes    Like[]
+  ratings  Rating[]
+  contacts Contact[]
 }
 
 model Category {
@@ -79,18 +72,6 @@ model Category {
   img           String
   icon_img      String
   accomodations Accomodation[]
-}
-
-model Rating {
-  id               Int   @id @default(autoincrement())
-  clean            Float
-  location         Float
-  communicate      Float
-  user_id          Int
-  accommodation_id Int
-
-  user          User         @relation(fields: [user_id], references: [id])
-  accommodation Accomodation @relation(fields: [accommodation_id], references: [id])
 }
 
 model Contact {
@@ -104,8 +85,20 @@ model Contact {
   user_id          Int
   accommodation_id Int
 
-  user          User         @relation(fields: [user_id], references: [id])
-  accommodation Accomodation @relation(fields: [accommodation_id], references: [id])
+  user          User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  accommodation Accomodation @relation(fields: [accommodation_id], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id               Int   @id @default(autoincrement())
+  clean            Float
+  location         Float
+  communicate      Float
+  user_id          Int
+  accommodation_id Int
+
+  user          User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  accommodation Accomodation @relation(fields: [accommodation_id], references: [id], onDelete: Cascade)
 }
 
 model Like {
@@ -114,6 +107,6 @@ model Like {
   user_id          Int
   accommodation_id Int
 
-  user          User         @relation(fields: [user_id], references: [id])
-  accommodation Accomodation @relation(fields: [accommodation_id], references: [id])
+  user          User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  accommodation Accomodation @relation(fields: [accommodation_id], references: [id], onDelete: Cascade)
 }
