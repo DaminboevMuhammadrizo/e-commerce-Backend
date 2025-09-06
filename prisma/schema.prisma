@@ -20,14 +20,14 @@ enum ListingType {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  firstName     String
-  lastName      String
-  email         String          @unique
-  role          UserRole        @default(BUYER)
-  password      String
-  avatar        String?
-  createdAt     DateTime        @default(now())
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  role      UserRole @default(BUYER)
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
 
   accommodations Accomodation[]
   likes          Like[]
@@ -36,26 +36,27 @@ model User {
 }
 
 model Accomodation {
-  id               Int               @id @default(autoincrement())
-  isActive         Boolean
-  title            String
-  beds             Int
-  baths            Int
-  garage           Int
-  sq_ft            Int
-  price            Float
-  discount         Float?
-  build_year       DateTime
-  description      String
-  documents        Json?
-  map_url          String?
-  latitude         String
-  longitude        Float
-  country          String
-  extra_features   Json?
-  listing_type     ListingType
-  user_id          Int
-  category_id      Int
+  id             Int         @id @default(autoincrement())
+  isActive       Boolean
+  title          String
+  beds           Int
+  baths          Int
+  garage         Int
+  sq_ft          Int
+  price          Float
+  discount       Float?
+  build_year     DateTime
+  description    String
+  documents      Json?
+  map_url        String?
+  latitude       Float
+  longitude      Float
+  country        String
+  extra_features Json?
+  listing_type   ListingType
+  introeVideo    String?
+  user_id        Int
+  category_id    Int
 
   accomodationImgs AccomodationImg[]
   user             User              @relation(fields: [user_id], references: [id])
@@ -73,27 +74,27 @@ model AccomodationImg {
 }
 
 model Category {
-  id             Int             @id @default(autoincrement())
-  name           String
-  img            String?
-  icon_img       String?
-  accomodations  Accomodation[]
+  id            Int            @id @default(autoincrement())
+  name          String         @unique
+  img           String
+  icon_img      String
+  accomodations Accomodation[]
 }
 
 model Rating {
-  id               Int          @id @default(autoincrement())
+  id               Int   @id @default(autoincrement())
   clean            Float
   location         Float
   communicate      Float
   user_id          Int
   accommodation_id Int
 
-  user             User         @relation(fields: [user_id], references: [id])
-  accommodation    Accomodation @relation(fields: [accommodation_id], references: [id])
+  user          User         @relation(fields: [user_id], references: [id])
+  accommodation Accomodation @relation(fields: [accommodation_id], references: [id])
 }
 
 model Contact {
-  id               Int          @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   date             DateTime
   time             String
   name             String
@@ -103,16 +104,16 @@ model Contact {
   user_id          Int
   accommodation_id Int
 
-  user             User         @relation(fields: [user_id], references: [id])
-  accommodation    Accomodation @relation(fields: [accommodation_id], references: [id])
+  user          User         @relation(fields: [user_id], references: [id])
+  accommodation Accomodation @relation(fields: [accommodation_id], references: [id])
 }
 
 model Like {
-  id               Int          @id @default(autoincrement())
+  id               Int     @id @default(autoincrement())
   like             Boolean
   user_id          Int
   accommodation_id Int
 
-  user             User         @relation(fields: [user_id], references: [id])
-  accommodation    Accomodation @relation(fields: [accommodation_id], references: [id])
+  user          User         @relation(fields: [user_id], references: [id])
+  accommodation Accomodation @relation(fields: [accommodation_id], references: [id])
 }
