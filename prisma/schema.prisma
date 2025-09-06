@@ -8,33 +8,61 @@ datasource db {
 }
 
 enum UserRole {
-  SELLER // sotuvchi
-  BUYER // haridor
-  ADMIN // Admin
-  SUPERADMIN // SuperAdmin
+  SELLER
+  BUYER
+  ADMIN
+  SUPERADMIN
 }
 
-model Users {
-  id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String   @unique
-  role      UserRole @default(BUYER)
-  password  String
-  avatar    String
-  createdAt String
+enum ListingType {
+  ForSale
+  ForRent
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String          @unique
+  role          UserRole        @default(BUYER)
+  password      String
+  avatar        String?
+  createdAt     DateTime        @default(now())
+
+  accommodations Accomodation[]
+  likes          Like[]
+  ratings        Rating[]
+  contacts       Contact[]
 }
 
 model Accomodation {
   id               Int               @id @default(autoincrement())
-  accomodationImgs AccomodationImg[]
   isActive         Boolean
   title            String
   beds             Int
   baths            Int
   garage           Int
   sq_ft            Int
-  
+  price            Float
+  discount         Float?
+  build_year       DateTime
+  description      String
+  documents        Json?
+  map_url          String?
+  latitude         String
+  longitude        Float
+  country          String
+  extra_features   Json?
+  listing_type     ListingType
+  user_id          Int
+  category_id      Int
+
+  accomodationImgs AccomodationImg[]
+  user             User              @relation(fields: [user_id], references: [id])
+  category         Category          @relation(fields: [category_id], references: [id])
+  likes            Like[]
+  ratings          Rating[]
+  contacts         Contact[]
 }
 
 model AccomodationImg {
@@ -42,4 +70,49 @@ model AccomodationImg {
   url            String
   accomodationId Int
   accomodation   Accomodation @relation(fields: [accomodationId], references: [id])
+}
+
+model Category {
+  id             Int             @id @default(autoincrement())
+  name           String
+  img            String?
+  icon_img       String?
+  accomodations  Accomodation[]
+}
+
+model Rating {
+  id               Int          @id @default(autoincrement())
+  clean            Float
+  location         Float
+  communicate      Float
+  user_id          Int
+  accommodation_id Int
+
+  user             User         @relation(fields: [user_id], references: [id])
+  accommodation    Accomodation @relation(fields: [accommodation_id], references: [id])
+}
+
+model Contact {
+  id               Int          @id @default(autoincrement())
+  date             DateTime
+  time             String
+  name             String
+  phone            String
+  email            String
+  message          String
+  user_id          Int
+  accommodation_id Int
+
+  user             User         @relation(fields: [user_id], references: [id])
+  accommodation    Accomodation @relation(fields: [accommodation_id], references: [id])
+}
+
+model Like {
+  id               Int          @id @default(autoincrement())
+  like             Boolean
+  user_id          Int
+  accommodation_id Int
+
+  user             User         @relation(fields: [user_id], references: [id])
+  accommodation    Accomodation @relation(fields: [accommodation_id], references: [id])
 }
