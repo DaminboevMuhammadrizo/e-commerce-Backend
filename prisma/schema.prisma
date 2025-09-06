@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SELLER // sotuvchi
+  BUYER // haridor
+  ADMIN // Admin
+  SUPERADMIN // SuperAdmin
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  role      UserRole @default(BUYER)
+  password  String
+  avatar    String
+  createdAt String
+}
+
+model Accomodation {
+  id               Int               @id @default(autoincrement())
+  accomodationImgs AccomodationImg[]
+  isActive         Boolean
+  title            String
+  beds             Int
+  baths            Int
+  garage           Int
+  sq_ft            Int
+  
+}
+
+model AccomodationImg {
+  id             Int          @id @default(autoincrement())
+  url            String
+  accomodationId Int
+  accomodation   Accomodation @relation(fields: [accomodationId], references: [id])
+}
