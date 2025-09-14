@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { RefreshTokenDto } from './dto/refresh-token';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { RegisterDto } from './dto/register';
 import { LoginDto } from './dto/login';
+import { RefreshTokenDto } from './dto/refresh-token';
+import { RegisterDto } from './dto/register';
 import { ResetPasswordDto } from './dto/reset-password';
 
 @ApiTags('Auth')
@@ -12,6 +12,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @ApiOperation({ summary: 'Foydalanuvchini ro‘yxatdan o‘tkazish' })
+    @ApiConsumes('multipart/form-data')
     @Post('register')
     register(@Body() payload: RegisterDto) {
         return this.authService.register(payload);

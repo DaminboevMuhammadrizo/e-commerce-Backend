@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ListingType } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -95,6 +95,10 @@ export class CreateAccommidationDto {
   @IsString()
   country: string;
 
+  @ApiProperty({ example: "Mustaqillik ko'cha 473 uy" })
+  @IsString()
+  street: string
+
   @ApiPropertyOptional({
     type: [String],
     description: 'Selected features (e.g., WiFi, Gym)',
@@ -103,15 +107,20 @@ export class CreateAccommidationDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.split(',').map((v) => v.trim());
+    }
+
+    return value;
+  })
   extra_features?: string[];
+
 
   @ApiProperty({ enum: ListingType, example: ListingType.ForSale })
   @IsEnum(ListingType)
   listing_type: ListingType;
 
-  @ApiProperty({ example: 1 })
-  @IsInt()
-  user_id: number;
 
   @ApiProperty({ example: 2 })
   @IsInt()

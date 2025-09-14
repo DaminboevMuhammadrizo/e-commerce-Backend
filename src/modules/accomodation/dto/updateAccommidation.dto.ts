@@ -124,11 +124,6 @@ export class UpdateAccommidationDto {
   @IsOptional()
   listing_type: ListingType;
 
-  @ApiProperty({ example: 1 })
-  @IsInt()
-  @IsOptional()
-  user_id: number;
-
   @ApiProperty({ example: 2 })
   @IsInt()
   @IsOptional()

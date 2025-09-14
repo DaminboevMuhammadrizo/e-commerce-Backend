@@ -4,7 +4,7 @@ import { IsInt, IsOptional } from 'class-validator';
 export class GetAllraintgDto {
   @ApiPropertyOptional({
     example: 0,
-    description: 'Offset (qaysi elementdan boshlab olish)',
+    description: 'Offset (start from which record)',
   })
   @IsOptional()
   @IsInt()
@@ -12,7 +12,7 @@ export class GetAllraintgDto {
 
   @ApiPropertyOptional({
     example: 10,
-    description: 'Nechta element olish kerakligi',
+    description: 'Number of records to fetch',
   })
   @IsOptional()
   @IsInt()
@@ -20,7 +20,7 @@ export class GetAllraintgDto {
 
   @ApiPropertyOptional({
     example: 1,
-    description: 'accommodation ga oid ratinglarni olish !',
+    description: 'Filter ratings by accommodation ID',
   })
   @IsInt()
   @IsOptional()

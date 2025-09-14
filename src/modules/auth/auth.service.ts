@@ -1,15 +1,15 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from 'src/Database/prisma.service';
-import { RegisterDto } from './dto/register';
-import { LoginDto } from './dto/login';
-import { ResetPasswordDto } from './dto/reset-password';
-import { RefreshTokenDto } from './dto/refresh-token';
 import { JwtService } from '@nestjs/jwt';
-import { VerificationsService } from '../verifications/verifications.service';
-import { JwtPayload } from 'src/common/types/InterfaceTypes';
-import { VerificationTypes } from 'src/common/types/EnumTypes';
-import { hashPassword } from 'src/common/config/bcrypt/hash';
 import { compirePassword } from 'src/common/config/bcrypt/compire';
+import { hashPassword } from 'src/common/config/bcrypt/hash';
+import { VerificationTypes } from 'src/common/types/EnumTypes';
+import { JwtPayload } from 'src/common/types/InterfaceTypes';
+import { PrismaService } from 'src/Database/prisma.service';
+import { VerificationsService } from '../verifications/verifications.service';
+import { LoginDto } from './dto/login';
+import { RefreshTokenDto } from './dto/refresh-token';
+import { RegisterDto } from './dto/register';
+import { ResetPasswordDto } from './dto/reset-password';
 
 @Injectable()
 export class AuthService {
@@ -59,8 +59,7 @@ export class AuthService {
         email: payload.email,
         firstName: payload.firstName,
         password: hashedPassword,
-        lastName: payload.lastName,
-        avatar: payload.avatar,
+        lastName: payload.lastName
       },
     });
 

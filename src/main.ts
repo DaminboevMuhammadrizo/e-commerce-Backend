@@ -24,7 +24,8 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
-  app.useStaticAssets(join(__dirname, '..', 'uploads/accommodations'), {
+
+  app.useStaticAssets(join(__dirname, '..', 'uploads/public'), {
     prefix: '/public/',
   });
   await setupSwagger(app);

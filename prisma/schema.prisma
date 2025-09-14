@@ -53,9 +53,10 @@ model Accomodation {
   latitude       Float
   longitude      Float
   country        String
+  street         String
   extra_features Json?
   listing_type   ListingType
-  introeVideo    String?
+  introVideo     String?
   user_id        Int
   category_id    Int
 
@@ -109,4 +110,12 @@ model Like {
 
   user          User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
   accommodation Accomodation @relation(fields: [accommodation_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, accommodation_id])
+}
+
+model Opinion {
+  id       Int    @id @default(autoincrement())
+  fullName String
+  message  String
 }

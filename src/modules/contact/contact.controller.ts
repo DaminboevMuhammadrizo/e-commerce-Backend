@@ -21,7 +21,7 @@ import { GetAllConatctsDto } from './dto/GetAllContactsDto';
 @ApiTags('Contact')
 @Controller('contact')
 export class ContactController {
-  constructor(private readonly contactService: ContactService) {}
+  constructor(private readonly contactService: ContactService) { }
 
   @Get('all')
   @ApiOperation({ summary: 'Barcha contactlarni olish' })

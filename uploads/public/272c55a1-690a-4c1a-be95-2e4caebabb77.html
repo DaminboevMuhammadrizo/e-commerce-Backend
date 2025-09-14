@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yulduzlarni Yig'ish - Kosmik Sarguzasht</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(180deg, #000428, #004e92);
+            border-radius: 20px;
+            border: 3px solid #00d4ff;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .game-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .score, .lives {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid #00d4ff;
+            font-size: 18px;
+            font-weight: bold;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+        }
+
+        .game-area {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .player {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+            transition: all 0.1s ease;
+            z-index: 10;
+        }
+
+        .player::before {
+            content: '🚀';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+        }
+
+        .star {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: sparkle 2s infinite;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
+            animation: pulse 1s infinite;
+        }
+
+        .obstacle::before {
+            content: '💥';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px solid #00d4ff;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .game-over h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 36px;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+        }
+
+        .game-over p {
+            color: #00d4ff;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .stars-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: moveStars 20s linear infinite;
+        }
+
+        @keyframes moveStars {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(-100px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="stars-bg"></div>
+        
+        <div class="game-header">
+            <div class="score">Ochko: <span id="score">0</span></div>
+            <div class="lives">Hayot: <span id="lives">3</span></div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="player" id="player"></div>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2>O'yin Tugadi!</h2>
+            <p>Sizning natijangiz: <span id="finalScore">0</span></p>
+            <button class="restart-btn" onclick="restartGame()">Qayta Boshlash</button>
+        </div>
+
+        <div class="instructions">
+            Strelka tugmalari yoki WASD bilan harakat qiling<br>
+            Yulduzlarni yig'ing va to'siqlardan qoching!
+        </div>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById('gameArea');
+        const player = document.getElementById('player');
+        const scoreElement = document.getElementById('score');
+        const livesElement = document.getElementById('lives');
+        const gameOverElement = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+
+        let gameState = {
+            score: 0,
+            lives: 3,
+            isGameOver: false,
+            playerX: 370,
+            playerY: 500,
+            stars: [],
+            obstacles: [],
+            keys: {}
+        };
+
+        const GAME_WIDTH = 800;
+        const GAME_HEIGHT = 600;
+        const PLAYER_SPEED = 5;
+        const ITEM_SPEED = 3;
+
+        // Klaviatura boshqaruvi
+        document.addEventListener('keydown', (e) => {
+            gameState.keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            gameState.keys[e.key] = false;
+        });
+
+        function updatePlayerPosition() {
+            if (gameState.isGameOver) return;
+
+            // Harakat yo'nalishlari
+            if (gameState.keys['ArrowLeft'] || gameState.keys['a'] || gameState.keys['A']) {
+                gameState.playerX = Math.max(0, gameState.playerX - PLAYER_SPEED);
+            }
+            if (gameState.keys['ArrowRight'] || gameState.keys['d'] || gameState.keys['D']) {
+                gameState.playerX = Math.min(GAME_WIDTH - 60, gameState.playerX + PLAYER_SPEED);
+            }
+            if (gameState.keys['ArrowUp'] || gameState.keys['w'] || gameState.keys['W']) {
+                gameState.playerY = Math.max(0, gameState.playerY - PLAYER_SPEED);
+            }
+            if (gameState.keys['ArrowDown'] || gameState.keys['s'] || gameState.keys['S']) {
+                gameState.playerY = Math.min(GAME_HEIGHT - 60, gameState.playerY + PLAYER_SPEED);
+            }
+
+            player.style.left = gameState.playerX + 'px';
+            player.style.top = gameState.playerY + 'px';
+        }
+
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * (GAME_WIDTH - 30) + 'px';
+            star.style.top = '-30px';
+            gameArea.appendChild(star);
+            
+            gameState.stars.push({
+                element: star,
+                x: parseInt(star.style.left),
+                y: -30
+            });
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            obstacle.style.left = Math.random() * (GAME_WIDTH - 40) + 'px';
+            obstacle.style.top = '-40px';
+            gameArea.appendChild(obstacle);
+            
+            gameState.obstacles.push({
+                element: obstacle,
+                x: parseInt(obstacle.style.left),
+                y: -40
+            });
+        }
+
+        function updateItems() {
+            // Yulduzlarni yangilash
+            gameState.stars.forEach((star, index) => {
+                star.y += ITEM_SPEED;
+                star.element.style.top = star.y + 'px';
+
+                // Yulduz ekrandan chiqib ketdi
+                if (star.y > GAME_HEIGHT) {
+                    star.element.remove();
+                    gameState.stars.splice(index, 1);
+                    return;
+                }
+
+                // Yulduz bilan to'qnashuv
+                if (checkCollision(gameState.playerX, gameState.playerY, 60, 60, 
+                                 star.x, star.y, 30, 30)) {
+                    gameState.score += 10;
+                    scoreElement.textContent = gameState.score;
+                    star.element.remove();
+                    gameState.stars.splice(index, 1);
+                    
+                    // Yulduz yig'ish effekti
+                    createSparkleEffect(star.x, star.y);
+                }
+            });
+
+            // To'siqlarni yangilash
+            gameState.obstacles.forEach((obstacle, index) => {
+                obstacle.y += ITEM_SPEED;
+                obstacle.element.style.top = obstacle.y + 'px';
+
+                // To'siq ekrandan chiqib ketdi
+                if (obstacle.y > GAME_HEIGHT) {
+                    obstacle.element.remove();
+                    gameState.obstacles.splice(index, 1);
+                    return;
+                }
+
+                // To'siq bilan to'qnashuv
+                if (checkCollision(gameState.playerX, gameState.playerY, 60, 60, 
+                                 obstacle.x, obstacle.y, 40, 40)) {
+                    gameState.lives--;
+                    livesElement.textContent = gameState.lives;
+                    obstacle.element.remove();
+                    gameState.obstacles.splice(index, 1);
+                    
+                    // Zarar effekti
+                    createExplosionEffect(obstacle.x, obstacle.y);
+                    
+                    if (gameState.lives <= 0) {
+                        endGame();
+                    }
+                }
+            });
+        }
+
+        function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
+            return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+        }
+
+        function createSparkleEffect(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.style.position = 'absolute';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.color = '#ffd700';
+            sparkle.style.fontSize = '20px';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '50';
+            sparkle.textContent = '+10';
+            sparkle.style.animation = 'sparkleUp 1s ease-out forwards';
+            gameArea.appendChild(sparkle);
+
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+
+        function createExplosionEffect(x, y) {
+            const explosion = document.createElement('div');
+            explosion.style.position = 'absolute';
+            explosion.style.left = x + 'px';
+            explosion.style.top = y + 'px';
+            explosion.style.color = '#ff6b6b';
+            explosion.style.fontSize = '24px';
+            explosion.style.pointerEvents = 'none';
+            explosion.style.zIndex = '50';
+            explosion.textContent = '💥';
+            explosion.style.animation = 'explode 0.5s ease-out forwards';
+            gameArea.appendChild(explosion);
+
+            setTimeout(() => explosion.remove(), 500);
+        }
+
+        function endGame() {
+            gameState.isGameOver = true;
+            finalScoreElement.textContent = gameState.score;
+            gameOverElement.style.display = 'block';
+        }
+
+        function restartGame() {
+            // O'yin holatini tiklash
+            gameState = {
+                score: 0,
+                lives: 3,
+                isGameOver: false,
+                playerX: 370,
+                playerY: 500,
+                stars: [],
+                obstacles: [],
+                keys: {}
+            };
+
+            // UI ni yangilash
+            scoreElement.textContent = '0';
+            livesElement.textContent = '3';
+            gameOverElement.style.display = 'none';
+            
+            // O'yinchi pozitsiyasini tiklash
+            player.style.left = gameState.playerX + 'px';
+            player.style.top = gameState.playerY + 'px';
+
+            // Barcha ob'ektlarni tozalash
+            gameState.stars.forEach(star => star.element.remove());
+            gameState.obstacles.forEach(obstacle => obstacle.element.remove());
+            gameState.stars = [];
+            gameState.obstacles = [];
+        }
+
+        // CSS animatsiyalarini qo'shish
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkleUp {
+                0% {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-50px) scale(1.5);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes explode {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // O'yin tsikli
+        let starSpawnTimer = 0;
+        let obstacleSpawnTimer = 0;
+
+        function gameLoop() {
+            if (!gameState.isGameOver) {
+                updatePlayerPosition();
+                updateItems();
+
+                // Yulduz yaratish
+                starSpawnTimer++;
+                if (starSpawnTimer > 60) {
+                    createStar();
+                    starSpawnTimer = 0;
+                }
+
+                // To'siq yaratish
+                obstacleSpawnTimer++;
+                if (obstacleSpawnTimer > 120) {
+                    createObstacle();
+                    obstacleSpawnTimer = 0;
+                }
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // O'yinni boshlash
+        gameLoop();
+    </script>
+</body>
+</html>

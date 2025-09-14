@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -21,6 +22,10 @@ import {
 } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { UsersRole } from 'src/common/types/EnumTypes';
+import { Roles } from 'src/core/decorators/roles';
+import { AuthGuard } from 'src/core/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/core/guards/roles.guard';
 import { v4 as uuidv4 } from 'uuid';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/createCategoryDto';
@@ -30,7 +35,7 @@ import { UpdateCategoryDto } from './dto/UpdateCategoryDto';
 @ApiTags('Category')
 @Controller('category')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) { }
 
   @Get('all')
   @ApiOperation({ summary: 'Barcha kategoriyalar roʻyxatini olish' })
@@ -38,12 +43,16 @@ export class CategoryController {
     return this.categoryService.getAll(query);
   }
 
+
   @Get('one/:id')
   @ApiOperation({ summary: 'Bitta kategoriyani olish' })
   getOne(@Param('id') id: string) {
     return this.categoryService.getOne(id);
   }
 
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UsersRole.ADMIN, UsersRole.SUPERADMIN)
   @ApiBearerAuth()
   @Post('create')
   @ApiOperation({ summary: 'Yangi categoriya yaratish' })
@@ -67,7 +76,7 @@ export class CategoryController {
       ],
       {
         storage: diskStorage({
-          destination: './uploads/category',
+          destination: './uploads/public',
           filename: (req, file, cb) => {
             const uniqueName = uuidv4() + extname(file.originalname);
             cb(null, uniqueName);
@@ -111,6 +120,9 @@ export class CategoryController {
     return this.categoryService.create(payload, { img, icon_img });
   }
 
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UsersRole.ADMIN, UsersRole.SUPERADMIN)
   @Put('update')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Kategoriyani yangilash' })
@@ -136,7 +148,7 @@ export class CategoryController {
       ],
       {
         storage: diskStorage({
-          destination: './uploads/category',
+          destination: './uploads/public',
           filename: (req, file, cb) => {
             const uniqueName = uuidv4() + extname(file.originalname);
             cb(null, uniqueName);
@@ -184,6 +196,8 @@ export class CategoryController {
     });
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UsersRole.ADMIN, UsersRole.SUPERADMIN)
   @Delete('delete/:id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Kategoriya o‘chirish' })

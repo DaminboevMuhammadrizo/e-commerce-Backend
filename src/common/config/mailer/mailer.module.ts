@@ -1,9 +1,11 @@
-import { Global, Module } from '@nestjs/common';
-import { MailerService } from './mailer.service';
 import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
-import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
- 
+import { Global, Module } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import { join } from 'path';
+import { MailerService } from './mailer.service';
+dotenv.config();
+
 @Global()
 @Module({
   imports: [

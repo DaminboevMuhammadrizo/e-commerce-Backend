@@ -1,45 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserRole } from 'src/common/types/EnumTypes';
 
 export class RegisterDto {
-  @ApiProperty({ example: 'Muhammadrizo' })
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   firstName: string;
 
-  @ApiProperty({ example: 'Daminoev' })
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   lastName: string;
 
-  @ApiProperty({ example: 'm701rizo@gmail.com' })
+  @ApiProperty()
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: UserRole.BUYER })
+  @ApiProperty({ enum: UserRole, example: UserRole.BUYER })
   @IsEnum(UserRole)
-  @IsNotEmpty()
-  role: string;
+  role: UserRole;
 
-  @ApiProperty({ example: 'admin123' })
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({ example: 'pictures/img.png' })
-  @IsString()
-  @IsOptional()
-  avatar?: string;
-
-  @ApiProperty({ example: 123456 })
+  @ApiProperty()
   @IsNumber()
   otp: number;
 }

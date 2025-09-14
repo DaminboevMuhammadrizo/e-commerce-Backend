@@ -1,0 +1,40 @@
+4.
+Xodimlar bo'yicha buyurtmalar soni
+Savol: Har bir xodim tomonidan qabul qilingan buyurtmalar sonini hisoblang.
+
+5
+Mahsulotlar bo'yicha umumiy savdo miqdori
+Savol: Har bir mahsulot bo'yicha umumiy savdo miqdorini (price * quantity) hisoblang.
+
+6
+Shaharlar bo'yicha mijozlar soni
+Savol: Har bir shahar uchun mijozlar sonini hisoblang.
+
+7
+ Kategoriyalar bo'yicha umumiy savdo miqdori
+Savol: Har bir kategoriya bo'yicha umumiy savdo miqdorini (price * quantity) hisoblang.
+
+8
+Mijozlar bo'yicha buyurtmalarning umumiy qiymati
+Savol: Har bir mijoz uchun qabul qilingan buyurtmalarning umumiy qiymatini (price * quantity) hisoblang.
+
+9
+ Xodimlar bo'yicha umumiy savdo miqdori
+Savol: Har bir xodim tomonidan amalga oshirilgan umumiy savdo miqdorini (price * quantity) hisoblang.
+
+10
+Mahsulotlar bo'yicha o'rtacha narx
+Savol: Har bir mahsulotning o'rtacha narxini hisoblang.
+
+11
+Shaharlar bo'yicha buyurtmalarning umumiy qiymati
+Savol: Har bir shahar uchun qabul qilingan buyurtmalarning umumiy qiymatini (price * quantity) hisoblang.
+
+12
+ Yetkazib beruvchilar bo'yicha o'rtacha mahsulot narxi
+Savol: Har bir yetkazib beruvchi uchun mahsulotlarning o'rtacha narxini hisoblang.
+
+
+13
+Mahsulotlar bo'yicha buyurtma miqdorlari
+Savol: Har bir mahsulot bo'yicha buyurtma qilingan umumiy miqdorni (quantity) hisoblang.
